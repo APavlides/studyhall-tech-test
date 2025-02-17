@@ -87,7 +87,7 @@ It depends on exact requirements, but some key challenges in a production settin
 
 - Processing entire books requires efficient batch processing (e.g., job queues with Pub/Sub, or Kafka).
 - A distributed processing framework like Apache Spark could improve parallelism for large datasets.
-- Running NLP models at scale might require GPU acceleration or optimised transformer models (e.g., distilBERT instead of BART).
+- Running NLP models at scale might require GPU acceleration or optimised transformer models.
 
 #### Data Quality & Preprocessing:
 
