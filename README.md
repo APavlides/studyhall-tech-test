@@ -10,7 +10,7 @@ This FastAPI service extracts character mentions and generates a summary from a 
 
 Docker \
 Docker Compose \
-IOS operating system (I will try and provide the amd64)
+MacOS (ARM64) operating system
 
 ### Instructions for how to run the service
 
@@ -83,34 +83,33 @@ Potential observations for real-world data include:
 
 It depends on exact requirements, but some key challenges in a production setting include:
 
-1. Scalability & Performance:
+#### Scalability & Performance:
 
 - Processing entire books requires efficient batch processing (e.g., job queues with Pub/Sub, or Kafka).
 - A distributed processing framework like Apache Spark could improve parallelism for large datasets.
 - Running NLP models at scale might require GPU acceleration or optimised transformer models (e.g., distilBERT instead of BART).
 
-2. Data Quality & Preprocessing:
+#### Data Quality & Preprocessing:
 
-- Mixed content: Some books may contain figures, tables, or non-text elements that impact understanding.
 - Named Entity Recognition (NER) Challenges: Character names may be ambiguous, and different spellings or references (e.g., "Elizabeth" vs. "Liz") need to be handled.
 
-3. Infrastructure & Deployment Considerations:
+#### Infrastructure & Deployment Considerations:
 
 - A microservices architecture with Kubernetes (K8s) could ensure scalability and fault tolerance.
 
 ### How you would expand the service to process all the chapters in each of 1,000 books.
 
-1. Optimized Model Execution:
+#### Optimised Model Execution:
 
-- Consider the correct size of NLP model for the job, if you can use a smaller model (e.g., T5-small or DistilBART) this would improve efficiency and cost.
+- Consider the correct size of NLP model for the job, if you can use a smaller model this would improve efficiency and cost.
 - Utilize GPU-based inference (e.g., TensorRT (this is the tool I was trying to remember in our conversation), ONNX Runtime) for faster processing.
 
-2. Infrastructure & Deployment:
+#### Infrastructure & Deployment:
 
 - Deploy the service using Kubernetes (K8s) and autoscaling to manage varying loads.
 - Use a message queue to distribute book processing tasks across worker nodes.
 
-3. Data and preprocessing
+#### Data and preprocessing
 
 - In terms of the algorithm, I have already including chunking but optimising this for larger texts is important.
 - There are usually some data quality issues within this amount of data that will appear from time to time unless the data has been carefully curated. For example images/figures that are required to understand the meaning of the text, or mathematical equations. There would need to be a preprocessing module to handle these cases if they exist.
