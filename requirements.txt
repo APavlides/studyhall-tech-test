@@ -3,3 +3,4 @@ uvicorn==0.34.0
 spacy==3.8.3
 transformers==4.48.3
 torch==2.6.0
+pyyaml

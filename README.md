@@ -25,19 +25,6 @@ git clone <repo-url>
 cd <repo-folder>
 ```
 
-Install dependencies:
-
-```sh
-pip install -r requirements.txt
-```
-
-Run the FastAPI server:
-
-```sh
-uvicorn script_name:app --reload
-
-```
-
 ## Docker Setup
 
 Build the Docker image:
@@ -64,6 +51,13 @@ curl -X 'POST' \
   -d "{
     \"book_text\": \"Harry Potter and the Sorcerer's Stone follows the story of a young wizard, Harry, as he discovers his magical abilities and faces challenges.\"
   }"
+```
+
+```bash
+curl -X 'POST' \
+  "http://localhost:8000/extract_information" \
+  -H "Content-Type: application/json" \
+  --data-binary @book.json
 ```
 
 Response:
@@ -98,3 +92,10 @@ Scale the service using Kubernetes or cloud functions for large datasets.
 ```
 
 ```
+
+TODO:
+
+Add docstrings
+Check why length of summary is not the same as config
+Remove comments
+Answer questions
