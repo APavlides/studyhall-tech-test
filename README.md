@@ -4,15 +4,23 @@
 
 This FastAPI service extracts character mentions and generates a summary from a given book passage.
 
-## Installation & Setup
+## Prerequisites
 
-### Prerequisites
+- Docker
+- Docker Compose
+- MacOS (ARM64) operating system
 
-Docker \
-Docker Compose \
-MacOS (ARM64) operating system
+## Instructions for how to run the service
 
-### Instructions for how to run the service
+### **Quick Start (Recommended)**
+
+If you have Docker Compose installed, simply run:
+
+```sh
+docker compose up --build
+```
+
+### Manual Steps (If Not Using Docker Compose)
 
 Build the Docker image:
 
@@ -96,6 +104,7 @@ It depends on exact requirements, but some key challenges in a production settin
 #### Infrastructure & Deployment Considerations:
 
 - A microservices architecture with Kubernetes (K8s) could ensure scalability and fault tolerance.
+- It needs logging and monitoring added to provide transparency
 
 ### How you would expand the service to process all the chapters in each of 1,000 books.
 
@@ -108,8 +117,10 @@ It depends on exact requirements, but some key challenges in a production settin
 
 - Deploy the service using Kubernetes (K8s) and autoscaling to manage varying loads.
 - Use a message queue to distribute book processing tasks across worker nodes.
+- It needs logging and monitoring added to provide transparency
+- Storage options needs to be considerdd to store extracted text and metadata.
 
 #### Data and preprocessing
 
-- In terms of the algorithm, I have already including chunking but optimising this for larger texts is important.
+- In terms of the algorithm, I have already included chunking but optimising this for larger texts is important.
 - There are usually some data quality issues within this amount of data that will appear from time to time unless the data has been carefully curated. For example images/figures that are required to understand the meaning of the text, or mathematical equations. There would need to be a preprocessing module to handle these cases if they exist.
