@@ -74,7 +74,8 @@ def chunk_text(text: str, chunk_size: int = CHUNK_SIZE):
     :return: A list of text chunks.
     :rtype: list[str]
     """
-    sentences = re.split(r"(?<=[.!?])\s+", text)  # Split on sentence endings
+    # Split on sentence endings
+    sentences = re.split(r"(?<=[.!?])\s+", text)
     chunks, current_chunk = [], ""
 
     for sentence in sentences:
@@ -116,10 +117,10 @@ def generate_summary(text: str):
             summaries.append(summary)
             print("summaries:", summaries)
         except Exception as e:
-            summaries.append("[Summary unavailable due to error]")  # Fallback text
-            print(f"Summarization error: {e}")  # Debugging log
+            summaries.append("[Summary unavailable due to error]")
+            print(f"Summarization error: {e}")
 
-    return " ".join(summaries)  # Merge summaries
+    return " ".join(summaries)
 
 
 @app.post("/extract_information")

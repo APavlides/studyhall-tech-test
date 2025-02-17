@@ -4,54 +4,42 @@
 
 This FastAPI service extracts character mentions and generates a summary from a given book passage.
 
-## Features
-
-Identifies characters mentioned in the passage
-Returns the character occurrences with their start and end token positions
-
 ## Installation & Setup
 
 ### Prerequisites
 
-Python 3.9+
-Docker (optional, for containerized deployment)
+Docker \
+Docker Compose \
+IOS operating system (I will try and provide the amd64)
 
-### Local Setup
-
-Clone the repository:
-
-```sh
-git clone <repo-url>
-cd <repo-folder>
-```
-
-## Docker Setup
+### Instructions for how to run the service
 
 Build the Docker image:
 
 ```sh
 docker buildx build --platform linux/arm64 --no-cache -t fastapi-extract-info --load .
-
 ```
-
-````
 
 Run the container:
 
 ```sh
 docker run -p 8000:8000 fastapi-extract-info
-````
+```
 
-## API Usage
+### API Usage
+
+To send a string:
 
 ```bash
 curl -X 'POST' \
   "http://localhost:8000/extract_information" \
   -H "Content-Type: application/json" \
   -d "{
-    \"book_text\": \"Harry Potter and the Sorcerer's Stone follows the story of a young wizard, Harry, as he discovers his magical abilities and faces challenges.\"
+    \"book_text\": \"There was no possibility of taking a walk that day. We had been wandering, indeed, in the leafless shrubbery an hour in the morning; but since dinner..\"
   }"
 ```
+
+To attach a document:
 
 ```bash
 curl -X 'POST' \
@@ -60,7 +48,7 @@ curl -X 'POST' \
   --data-binary @book.json
 ```
 
-Response:
+Sample response:
 
 ```json
 {
@@ -79,23 +67,50 @@ Response:
 }
 ```
 
-## Observations & Challenges
+## Questions
 
-Character Identification: The model relies on spaCy's Named Entity Recognition (NER), which may miss some characters or misidentify them.
-Summarization: The text summarization uses transformers from Hugging Face, which works well for short passages but may need adjustments for longer texts.
-Scaling Considerations: Processing full books (e.g., 1,000+ chapters) would require a more efficient batch-processing approach, possibly using job queues like Celery or distributed processing frameworks.
-Future Improvements
-Improve character extraction accuracy with custom-trained models.
-Implement caching for repeated requests.
-Scale the service using Kubernetes or cloud functions for large datasets.
+### Any observations you had about the data
 
-```
+The text was initially processed by replacing newlines with spaces to ensure cleaner input for the NLP pipeline. I did not conduct extensive preprocessing beyond this.
 
-```
+Potential observations for real-world data include:
 
-TODO:
+- Inconsistent formatting (e.g., varying line breaks, special characters, or non-standard spacing).
+- Presence of non-text elements, such as images, tables, or mathematical formulas, which could impact summarization quality.
+- Named entity ambiguity, where different characters might share similar names or be referenced in various forms (e.g., "Dr. Watson" vs. "Watson").
 
-Add docstrings
-Check why length of summary is not the same as config
-Remove comments
-Answer questions
+## Any data or infrastructure challenges that would need to be overcome if this was used in production to extract characters from real books.
+
+It depends on exact requirements, but some key challenges in a production setting include:
+
+1. Scalability & Performance:
+
+- Processing entire books requires efficient batch processing (e.g., job queues with Pub/Sub, or Kafka).
+- A distributed processing framework like Apache Spark could improve parallelism for large datasets.
+- Running NLP models at scale might require GPU acceleration or optimised transformer models (e.g., distilBERT instead of BART).
+
+2. Data Quality & Preprocessing:
+
+- Mixed content: Some books may contain figures, tables, or non-text elements that impact understanding.
+- Named Entity Recognition (NER) Challenges: Character names may be ambiguous, and different spellings or references (e.g., "Elizabeth" vs. "Liz") need to be handled.
+
+3. Infrastructure & Deployment Considerations:
+
+- A microservices architecture with Kubernetes (K8s) could ensure scalability and fault tolerance.
+
+### How you would expand the service to process all the chapters in each of 1,000 books.
+
+1. Optimized Model Execution:
+
+- Consider the correct size of NLP model for the job, if you can use a smaller model (e.g., T5-small or DistilBART) this would improve efficiency and cost.
+- Utilize GPU-based inference (e.g., TensorRT (this is the tool I was trying to remember in our conversation), ONNX Runtime) for faster processing.
+
+2. Infrastructure & Deployment:
+
+- Deploy the service using Kubernetes (K8s) and autoscaling to manage varying loads.
+- Use a message queue to distribute book processing tasks across worker nodes.
+
+3. Data and preprocessing
+
+- In terms of the algorithm, I have already including chunking but optimising this for larger texts is important.
+- There are usually some data quality issues within this amount of data that will appear from time to time unless the data has been carefully curated. For example images/figures that are required to understand the meaning of the text, or mathematical equations. There would need to be a preprocessing module to handle these cases if they exist.
